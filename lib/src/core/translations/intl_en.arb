@@ -1,0 +1,13 @@
+{
+  "arabic": "العربية",
+  "english": "English",
+  "explorer": "Explore",
+  "required_field": "Required Field",
+  "search": "Search",
+  "all_movies": "All Movies",
+  "pull_up_load": " Pull Up Load",
+  "load_failed": "Load failed! Click Retry!",
+  "release_to_load": "Release To Load More",
+  "no_more_data": "No More Data",
+  "no_data": "No Data!"
+}

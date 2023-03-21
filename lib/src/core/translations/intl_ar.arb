@@ -1,0 +1,13 @@
+{
+  "arabic": "العربية",
+  "english": "English",
+  "explorer": "تصفح",
+  "required_field": "الحقل مطلوب",
+  "search": "البحث",
+  "all_movies": "كل الأفلام",
+  "pull_up_load": "اسحب للتحميل",
+  "load_failed": "فشل التحميل! انقر فوق إعادة المحاولة!",
+  "release_to_load": "حرر لتحميل المزيد",
+  "no_more_data": "لايوجد مزيد من البيانات",
+  "no_data": "لا يوجد بيانات!"
+}
