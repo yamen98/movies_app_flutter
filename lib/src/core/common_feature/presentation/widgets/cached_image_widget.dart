@@ -10,42 +10,40 @@ class CachedImageWidget extends StatelessWidget {
   final double? radius;
 
   const CachedImageWidget(
-      {Key? key, this.width, this.height, required this.imageUrl, this.radius})
+      {Key? key,
+      this.width,
+      this.height,
+      required this.imageUrl,
+      this.radius,
+      })
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1.8,
-      child: FittedBox(
-        fit: BoxFit.fill,
-        child: Container(
-            decoration: radius == null
-                ? null
-                : BoxDecoration(
-                    // image: DecorationImage(image: NetworkImage(appAdvert.imageUrl)),
-                    borderRadius:
-                        BorderRadius.all(Radius.circular(radius ?? 0))),
-            height: height,
-            width: width,
-            child: imageUrl != null && imageUrl != ""
-                ? CachedNetworkImage(
-                    imageUrl: imageUrl ?? "",
-                    height: height,
-                    width: width,
-                    fit: BoxFit.contain,
-                    errorWidget: (context, url, error) => Image.asset(
-                      Helper.getImagePath("no_image.jpg"),
-                      fit: BoxFit.contain,
-                    ),
-                  )
-                : Image.asset(
-                    'assets/images/no_records.png',
-                    height: height,
-                    width: width,
-                    fit: BoxFit.contain,
-                  )),
-      ),
-    );
+    return Container(
+        decoration: radius == null
+            ? null
+            : BoxDecoration(
+                // image: DecorationImage(image: NetworkImage(appAdvert.imageUrl)),
+                borderRadius: BorderRadius.all(Radius.circular(radius ?? 0))),
+        height: height,
+        width: width,
+        child: imageUrl != null && imageUrl != ""
+            ? CachedNetworkImage(
+                imageUrl: imageUrl ?? "",
+                height: height,
+                width: width,
+                fit: BoxFit.cover,
+                errorWidget: (context, url, error) => Image.asset(
+                  Helper.getImagePath("no_image.jpg"),
+                  fit: BoxFit.contain,
+                ),
+              )
+            : Image.asset(
+                'assets/images/no_records.png',
+                height: height,
+                width: width,
+                fit: BoxFit.contain,
+              ));
   }
 }

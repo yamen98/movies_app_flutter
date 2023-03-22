@@ -6,26 +6,20 @@ import '../../../util/helper.dart';
 
 class BackgroundPage extends StatefulWidget {
   final Widget child;
-  final bool isImage;
+  final Color? backgroundColor;
   final bool withDrawer;
-  final Function(String coin)? drawerCallBack;
+  final Function()? drawerCallBack;
   final GlobalKey<ScaffoldState>? scaffoldKey;
-  final ValueNotifier<double>? dyValueNotifier;
-  final bool isMoving;
-  final bool tradeBackground;
   final bool topSafeArea;
   final bool bottomSafeArea;
 
   const BackgroundPage({
     required this.child,
+    this.backgroundColor,
     this.withDrawer = false,
-    this.isImage = true,
     this.drawerCallBack,
     this.scaffoldKey,
     Key? key,
-    this.dyValueNotifier,
-    this.isMoving = false,
-    this.tradeBackground = false,
     this.topSafeArea = true,
     this.bottomSafeArea = true,
   }) : super(key: key);
@@ -46,37 +40,33 @@ class _BackgroundPageState extends State<BackgroundPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        color: widget.tradeBackground
-            ? Helper.isDarkTheme()
-                ? AppColors.darkBackground
-                : AppColors.lightBackground
-            : Theme.of(context).colorScheme.background,
-        child: Scaffold(
-          key: widget.scaffoldKey,
-          backgroundColor: Colors.transparent,
-          resizeToAvoidBottomInset: false,
-          onDrawerChanged: (isOpened) {
-            if (!isOpened) {
-              if (!isCallFromDrawer) {
-                if (widget.drawerCallBack != null) {
-                  widget.drawerCallBack!("");
-                }
-              }
-              isCallFromDrawer = false;
+    return Scaffold(
+      key: widget.scaffoldKey,
+      backgroundColor: widget.backgroundColor == null
+          ? Colors.transparent
+          : AppColors.primaryColor,
+      resizeToAvoidBottomInset: false,
+      onDrawerChanged: (isOpened) {
+        if (!isOpened) {
+          if (!isCallFromDrawer) {
+            if (widget.drawerCallBack != null) {
+              widget.drawerCallBack!();
             }
-          },
-          drawer: widget.withDrawer
-              ? Drawer(
-                  width: 0.7.w,
-                  child: AppDrawerPage(),
-                )
-              : null,
-          body: SafeArea(
-            bottom: widget.bottomSafeArea,
-            top: widget.topSafeArea,
-            child: widget.child,
-          ),
-        ));
+          }
+          isCallFromDrawer = false;
+        }
+      },
+      drawer: widget.withDrawer
+          ? Drawer(
+              width: 0.7.w,
+              child: AppDrawerPage(),
+            )
+          : null,
+      body: SafeArea(
+        bottom: widget.bottomSafeArea,
+        top: widget.topSafeArea,
+        child: widget.child,
+      ),
+    );
   }
 }

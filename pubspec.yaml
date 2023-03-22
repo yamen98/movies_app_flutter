@@ -93,6 +93,9 @@ dependencies:
   # Shimmer when loading data from data source
   shimmer: ^2.0.0
 
+  # Device preview to test app in all devices
+  device_preview: ^1.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

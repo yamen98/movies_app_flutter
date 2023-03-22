@@ -1,75 +1,102 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:movies_app/src/core/common_feature/presentation/widgets/app_flow_delegate.dart';
 import 'package:movies_app/src/core/common_feature/presentation/widgets/cached_image_widget.dart';
-import 'package:movies_app/src/core/styles/app_colors.dart';
 import 'package:movies_app/src/core/util/constant/app_constants.dart';
 import 'package:movies_app/src/features/movies/domain/entities/movies_model.dart';
 
 class MovieCardWidget extends StatefulWidget {
   final MoviesModel model;
+  final Function() onTap;
 
-  const MovieCardWidget({super.key, required this.model});
+  const MovieCardWidget({
+    super.key,
+    required this.model,
+    required this.onTap,
+  });
 
   @override
   State<MovieCardWidget> createState() => _MovieCardWidgetState();
 }
 
 class _MovieCardWidgetState extends State<MovieCardWidget> {
+  final GlobalKey _backgroundImageKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
-      child: Stack(
-        children: [
-          // Movie Image
-          CachedImageWidget(
-            imageUrl: widget.model.poster,
-            radius: 12,
-            width: ScreenUtil().screenWidth,
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: AspectRatio(
+        aspectRatio: 16 / 9,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: Stack(
+            children: [
+              _buildParallaxBackground(context),
+              _buildGradientShadow(),
+              _buildTitleAndDate(),
+            ],
           ),
+        ),
+      ),
+    );
+  }
 
-          // Shadow
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    colors: [
-                      AppColors.transparent,
-                      AppColors.black.withOpacity(0.6),
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: [0.5, 0.95]),
-              ),
+  // Movie image
+  Widget _buildParallaxBackground(BuildContext context) {
+    return Flow(
+      delegate: ParallaxFlowDelegate(
+        scrollable: Scrollable.of(context),
+        listItemContext: context,
+        backgroundImageKey: _backgroundImageKey,
+      ),
+      children: [
+        CachedImageWidget(
+          imageUrl: widget.model.poster,
+          key: _backgroundImageKey,
+          // fit: BoxFit.cover,
+        ),
+      ],
+    );
+  }
+
+  // Black shadow
+  Widget _buildGradientShadow() {
+    return Positioned.fill(
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            stops: const [0.6, 0.95],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Movie title and date
+  Widget _buildTitleAndDate() {
+    return Positioned(
+      left: 20,
+      bottom: 20,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            widget.model.title ?? defaultStr,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
           ),
-
-          // Name And Other Information
-          Positioned(
-            left: 20,
-            right: 20,
-            bottom: 20,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.model.title ?? defaultStr,
-                  style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.white,
-                      ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: true,
-                ),
-                Text(
-                  "${widget.model.type}/${widget.model.year}",
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        color: AppColors.white,
-                      ),
-                ),
-              ],
+          Text(
+            "${widget.model.type}/${widget.model.year}",
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
             ),
           ),
         ],

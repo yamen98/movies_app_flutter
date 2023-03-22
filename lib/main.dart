@@ -1,5 +1,9 @@
-import 'dart:io';
-
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movies_app/src/core/common_feature/data/data_sources/app_shared_prefs.dart';
 import 'package:movies_app/src/core/common_feature/presentation/widgets/app_snack_bar.dart';
 import 'package:movies_app/src/core/styles/app_theme.dart';
@@ -7,11 +11,6 @@ import 'package:movies_app/src/core/translations/l10n.dart';
 import 'package:movies_app/src/core/util/helper.dart';
 import 'package:movies_app/src/core/util/injections.dart';
 import 'package:movies_app/src/core/util/router.dart';
-import 'package:movies_app/src/features/intro/presentation/pages/intro_page.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'src/features/movies/presentation/pages/movies_page.dart';
 
@@ -22,7 +21,12 @@ void main() async {
 
   await initInjections();
   AppSnackBar.init();
-  runApp(const App());
+  runApp(DevicePreview(
+    builder: (context) {
+      return const App();
+    },
+    enabled: !kReleaseMode,
+  ));
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
@@ -46,7 +50,7 @@ class App extends StatefulWidget {
 class _AppState extends State<App> with WidgetsBindingObserver {
   Locale locale = const Locale("en");
   final GlobalKey<ScaffoldMessengerState> snackbarKey =
-      GlobalKey<ScaffoldMessengerState>();
+  GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
@@ -83,6 +87,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
           theme: appTheme,
           debugShowCheckedModeBanner: false,
           locale: locale,
+          builder: DevicePreview.appBuilder,
           localizationsDelegates: const [
             S.delegate,
             GlobalMaterialLocalizations.delegate,
@@ -95,9 +100,11 @@ class _AppState extends State<App> with WidgetsBindingObserver {
             Locale("en"),
           ],
           home: child,
+          initialRoute: "/movies_page",
         );
       },
-      child: const MoviesPage(),
+      // child: const MoviesPage(),
     );
   }
 }
+

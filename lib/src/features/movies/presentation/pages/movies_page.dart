@@ -46,6 +46,7 @@ class _MoviesPageState extends State<MoviesPage> {
       appBar: AppBar(
         toolbarHeight: 100.sp,
         elevation: 0,
+        automaticallyImplyLeading: false,
         flexibleSpace: ClipPath(
           clipper: CustomClipperPath(),
           child: Container(
@@ -248,6 +249,12 @@ class _MoviesPageState extends State<MoviesPage> {
                       itemBuilder: (context, index) {
                         return MovieCardWidget(
                           model: movies[index],
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              "/movie_details_page",
+                            );
+                          },
                         );
                       },
                       separatorBuilder: (context, index) {
