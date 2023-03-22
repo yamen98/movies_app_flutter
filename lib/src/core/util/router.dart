@@ -16,11 +16,14 @@ class AppRouter {
           builder: (_) => const MoviesPage(),
         );
 
-        // Movie details page
-     case '/movie_details_page':
+      // Movie details page
+      case '/movie_details_page':
+        String movieId = settings.arguments as String;
         return CupertinoPageRoute(
           settings: RouteSettings(name: settings.name),
-          builder: (_) => const MovieDetailsPage(),
+          builder: (_) => MovieDetailsPage(
+            movieId: movieId,
+          ),
         );
 
       default:

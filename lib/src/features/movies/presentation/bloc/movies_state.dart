@@ -36,3 +36,24 @@ class SuccessGetMoviesState extends MoviesState {
 class ClearSearchTextFieldState extends MoviesState {}
 
 /// --------------------End Clear Text Field-------------------- ///
+
+/// --------------------Start Get Movie Details By Id-------------------- ///
+
+/// Loading get movie details by id state
+class LoadingGetMovieDetailsByIdState extends MoviesState {}
+
+/// Error get movie details by id state
+class ErrorGetMovieDetailsByIdState extends MoviesState {
+  final String errorMsg;
+
+  ErrorGetMovieDetailsByIdState(this.errorMsg);
+}
+
+/// Success get movie details by id state
+class SuccessGetMovieDetailsByIdState extends MoviesState {
+  final MovieDetailsModel? movieDetailsModel;
+
+  SuccessGetMovieDetailsByIdState(this.movieDetailsModel);
+}
+
+/// --------------------End Get Movie Details By Id-------------------- ///

@@ -1,18 +1,19 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:movies_app/src/core/network/error/failures.dart';
 import 'package:movies_app/src/core/util/usecases/usecase.dart';
+import 'package:movies_app/src/features/movies/domain/entities/movie_details_model.dart';
 import 'package:movies_app/src/features/movies/domain/entities/movies_response_model.dart';
 import 'package:movies_app/src/features/movies/domain/repositories/movies_repository.dart';
 import 'package:dartz/dartz.dart';
 
-class MoviesUseCase extends UseCase<MoviesResponseModel, MoviesParams> {
+class GetMovieDetailsUseCase extends UseCase<MovieDetailsModel?, MovieDetailsParams> {
   final MoviesRepository repository;
 
-  MoviesUseCase(this.repository);
+  GetMovieDetailsUseCase(this.repository);
 
   @override
-  Future<Either<Failure, MoviesResponseModel>> call(MoviesParams params) async {
-    final result = await repository.movies(params);
+  Future<Either<Failure, MovieDetailsModel?>> call(MovieDetailsParams params) async {
+    final result = await repository.getMovieDetailsById(params);
     return result.fold((l) {
       return Left(l);
     }, (r) async {
@@ -21,12 +22,10 @@ class MoviesUseCase extends UseCase<MoviesResponseModel, MoviesParams> {
   }
 }
 
-class MoviesParams {
-  final String textToSearch;
-  final int page;
+class MovieDetailsParams {
+  final String movieId;
 
-  MoviesParams({
-    required this.textToSearch,
-    required this.page,
+  MovieDetailsParams({
+    required this.movieId,
   });
 }

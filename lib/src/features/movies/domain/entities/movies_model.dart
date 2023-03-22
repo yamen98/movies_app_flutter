@@ -2,21 +2,17 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'movies_model.g.dart';
 
-@JsonSerializable(fieldRename: FieldRename.snake)
+@JsonSerializable(fieldRename: FieldRename.pascal)
 class MoviesModel {
-  @JsonKey(name: "Title")
   final String? title;
 
-  @JsonKey(name: "Year")
   final String year;
 
   @JsonKey(name: "imdbID")
   final String imdbID;
 
-  @JsonKey(name: "Type")
   final String type;
 
-  @JsonKey(name: "Poster")
   final String poster;
 
   MoviesModel(

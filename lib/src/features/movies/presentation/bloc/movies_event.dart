@@ -19,3 +19,10 @@ class OnGettingMoviesEvent extends MoviesEvent {
 
 /// Clear search text field
 class OnClearingSearchTextFieldEvent extends MoviesEvent {}
+
+/// Get movie details by id event
+class OnGettingMovieDetailsByIdEvent extends MoviesEvent {
+  final String id;
+
+  OnGettingMovieDetailsByIdEvent(this.id);
+}

@@ -3,15 +3,13 @@ import 'package:movies_app/src/features/movies/domain/entities/movies_model.dart
 
 part 'movies_response_model.g.dart';
 
-@JsonSerializable(fieldRename: FieldRename.snake)
+@JsonSerializable(fieldRename: FieldRename.pascal)
 class MoviesResponseModel {
-  @JsonKey(name: "Search")
   final List<MoviesModel> search;
 
   @JsonKey(name: "totalResults")
   final String totalResults;
 
-  @JsonKey(name: "Response")
   final String response;
 
   MoviesResponseModel(

@@ -1,8 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:movies_app/src/core/network/error/failures.dart';
 import 'package:movies_app/src/core/util/injections.dart';
+import 'package:movies_app/src/features/movies/domain/entities/movie_details_model.dart';
 import 'package:movies_app/src/features/movies/domain/entities/movies_model.dart';
 import 'package:movies_app/src/features/movies/domain/entities/movies_response_model.dart';
+import 'package:movies_app/src/features/movies/domain/usecases/movie_details_usecase.dart';
 import 'package:movies_app/src/features/movies/domain/usecases/movies_usecase.dart';
 
 part 'movies_event.dart';
@@ -11,16 +13,19 @@ part 'movies_state.dart';
 
 class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
   late MoviesUseCase moviesUseCase;
+  late GetMovieDetailsUseCase getMovieDetailsUseCase;
 
   MoviesBloc() : super(MoviesInitial()) {
     moviesUseCase = sl<MoviesUseCase>();
+    getMovieDetailsUseCase = sl<GetMovieDetailsUseCase>();
 
-    on<OnGettingMoviesEvent>(_onGettingMovies);
-    on<OnClearingSearchTextFieldEvent>(_onClearingSearchTextField);
+    on<OnGettingMoviesEvent>(_onGettingMoviesEvent);
+    on<OnClearingSearchTextFieldEvent>(_onClearingSearchTextFieldEvent);
+    on<OnGettingMovieDetailsByIdEvent>(_onGettingMovieDetailsByIdEvent);
   }
 
   /// Movies event
-  _onGettingMovies(
+  _onGettingMoviesEvent(
       OnGettingMoviesEvent event, Emitter<MoviesState> emitter) async {
     // Don't emit loading state is i scroll down to load more
     if (!event.isLoadingMore) {
@@ -52,8 +57,27 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
   }
 
   /// Clear search text field event
-  _onClearingSearchTextField(OnClearingSearchTextFieldEvent event,
+  _onClearingSearchTextFieldEvent(OnClearingSearchTextFieldEvent event,
       Emitter<MoviesState> emitter) async {
     emitter(ClearSearchTextFieldState());
+  }
+
+  /// Get movie details by id event
+  _onGettingMovieDetailsByIdEvent(OnGettingMovieDetailsByIdEvent event,
+      Emitter<MoviesState> emitter) async {
+    emitter(LoadingGetMovieDetailsByIdState());
+
+    final result = await getMovieDetailsUseCase.call(
+      MovieDetailsParams(
+        movieId: event.id,
+      ),
+    );
+    result.fold((l) {
+      emitter(ErrorGetMoviesState(l.errorMessage));
+    }, (r) {
+      emitter(
+        SuccessGetMovieDetailsByIdState(r),
+      );
+    });
   }
 }

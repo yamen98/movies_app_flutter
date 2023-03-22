@@ -253,6 +253,7 @@ class _MoviesPageState extends State<MoviesPage> {
                             Navigator.pushNamed(
                               context,
                               "/movie_details_page",
+                              arguments: movies[index].imdbID,
                             );
                           },
                         );
