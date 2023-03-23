@@ -3,6 +3,7 @@ name: Generate apk for QA
 
 on:
   push:
+    branches:
       - main
 
   workflow_dispatch:
