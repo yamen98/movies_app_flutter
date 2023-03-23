@@ -5,3 +5,4 @@ const String logFolderName = "MyLogs";
 const String exportedLogFolderName = "Exported";
 const String exportedLogZipName = "log";
 const int perPage = 10;
+const String notANumber = "N/A";

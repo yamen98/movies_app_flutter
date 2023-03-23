@@ -27,7 +27,7 @@ class AppSnackBar {
         backgroundColor = AppColors.red;
         break;
       default:
-        backgroundColor = AppColors.gray;
+        backgroundColor = AppColors.darkGray;
     }
 
     snackBar.dismiss();
@@ -52,7 +52,7 @@ class AppSnackBar {
       flushbarPosition: FlushbarPosition.TOP,
       margin: EdgeInsets.symmetric(
         horizontal: 15.h,
-        vertical: 15.h,
+        vertical: 30.h,
       ),
     );
     snackBar.show(context);

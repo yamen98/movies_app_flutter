@@ -11,6 +11,7 @@ class ButtonWidget extends StatefulWidget {
   final Function()? onPressed;
   final double? elevation;
   final Color? borderColor;
+  final double? borderWidth;
   final Color? shadowColor;
 
   const ButtonWidget({
@@ -24,6 +25,7 @@ class ButtonWidget extends StatefulWidget {
     this.onPressed,
     this.elevation,
     this.borderColor,
+    this.borderWidth,
     this.shadowColor,
   }) : super(key: key);
 
@@ -50,8 +52,7 @@ class _ButtonWidgetState extends State<ButtonWidget> {
         shape: RoundedRectangleBorder(
           side: widget.borderColor != null
               ? BorderSide(
-                  color: widget.borderColor!,
-                )
+                  color: widget.borderColor!, width: widget.borderWidth ?? 1)
               : const BorderSide(
                   color: AppColors.transparent,
                 ),

@@ -12,7 +12,9 @@ import 'package:movies_app/src/core/util/helper.dart';
 import 'package:movies_app/src/core/util/injections.dart';
 import 'package:movies_app/src/core/util/router.dart';
 
+import 'src/core/common_feature/domain/entities/language_enum.dart';
 import 'src/features/movies/presentation/pages/movies_page.dart';
+import 'package:provider/provider.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -25,7 +27,7 @@ void main() async {
     builder: (context) {
       return const App();
     },
-    enabled: !kReleaseMode,
+    enabled: kReleaseMode,
   ));
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -38,10 +40,10 @@ class App extends StatefulWidget {
   @override
   _AppState createState() => _AppState();
 
-  static void setLocale(BuildContext context, String newLocale) {
+  static void setLocale(BuildContext context, LanguageEnum newLocale) {
     _AppState state = context.findAncestorStateOfType()!;
     state.setState(() {
-      state.locale = Locale(newLocale);
+      state.locale = Locale(newLocale.name);
     });
     sl<AppSharedPrefs>().setLang(newLocale);
   }
@@ -50,7 +52,7 @@ class App extends StatefulWidget {
 class _AppState extends State<App> with WidgetsBindingObserver {
   Locale locale = const Locale("en");
   final GlobalKey<ScaffoldMessengerState> snackbarKey =
-  GlobalKey<ScaffoldMessengerState>();
+      GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
@@ -59,9 +61,9 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
 
     if (mounted) {
-      String newLocale = Helper.getLang();
+      LanguageEnum newLocale = Helper.getLang();
       setState(() {
-        locale = Locale(newLocale);
+        locale = Locale(newLocale.local);
       });
     }
   }
@@ -74,37 +76,67 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(360, 690),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context, child) {
-        return MaterialApp(
-          useInheritedMediaQuery: false,
-          title: 'Clinic',
-          scaffoldMessengerKey: snackbarKey,
-          onGenerateRoute: AppRouter.generateRoute,
-          theme: appTheme,
-          debugShowCheckedModeBanner: false,
-          locale: locale,
-          builder: DevicePreview.appBuilder,
-          localizationsDelegates: const [
-            S.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          navigatorKey: navigatorKey,
-          supportedLocales: const [
-            Locale("ar"),
-            Locale("en"),
-          ],
-          home: child,
-          initialRoute: "/movies_page",
-        );
-      },
-      // child: const MoviesPage(),
+    return ChangeNotifierProvider(
+      create: (_) => AppNotifier(),
+      child: Consumer<AppNotifier>(
+        builder: (context, value, child) {
+          return ScreenUtilInit(
+            designSize: const Size(360, 690),
+            minTextAdapt: true,
+            splitScreenMode: true,
+            builder: (context, child) {
+              return MaterialApp(
+                useInheritedMediaQuery: false,
+                title: 'Clinic',
+                scaffoldMessengerKey: snackbarKey,
+                onGenerateRoute: AppRouter.generateRoute,
+                theme: Helper.isDarkTheme() ? darkAppTheme : appTheme,
+                debugShowCheckedModeBanner: false,
+                locale: locale,
+                builder: DevicePreview.appBuilder,
+                localizationsDelegates: const [
+                  S.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                navigatorKey: navigatorKey,
+                supportedLocales: const [
+                  Locale("ar"),
+                  Locale("en"),
+                ],
+                home: const MoviesPage(),
+                // initialRoute: "/movies_page",
+              );
+            },
+            // child: const MoviesPage(),
+          );
+        },
+      ),
     );
   }
 }
 
+class AppNotifier extends ChangeNotifier {
+  late bool darkTheme;
+
+  AppNotifier() {
+    _initialise();
+  }
+
+  Future _initialise() async {
+    darkTheme = Helper.isDarkTheme();
+
+    notifyListeners();
+  }
+
+  void updateThemeTitle(bool newDarkTheme) {
+    darkTheme = newDarkTheme;
+    if (Helper.isDarkTheme()) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+    } else {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+    }
+    notifyListeners();
+  }
+}

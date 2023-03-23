@@ -6,12 +6,12 @@ part 'movie_ratting_model.g.dart';
 @JsonSerializable(fieldRename: FieldRename.pascal)
 class MovieRattingModel {
   MovieRattingModel({
-    required this.Source,
-    required this.Value,
+    required this.source,
+    required this.value,
   });
 
-  late final String Source;
-  late final String Value;
+  late final String source;
+  late final String value;
 
   factory MovieRattingModel.fromJson(json) => _$MovieRattingModelFromJson(json);
 
@@ -20,5 +20,4 @@ class MovieRattingModel {
   static List<MovieRattingModel> fromJsonList(List json) {
     return json.map((e) => MovieRattingModel.fromJson(e)).toList();
   }
-
 }

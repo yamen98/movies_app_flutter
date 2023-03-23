@@ -7,12 +7,14 @@ abstract class MoviesEvent {
 /// Get movies event
 class OnGettingMoviesEvent extends MoviesEvent {
   final String textToSearch;
+  final MovieFilterModel filterModel;
   final int page;
   final bool isLoadingMore;
 
   OnGettingMoviesEvent(
     this.textToSearch,
-    this.page, {
+    this.page,
+    this.filterModel, {
     this.isLoadingMore = false,
   });
 }
@@ -24,5 +26,7 @@ class OnClearingSearchTextFieldEvent extends MoviesEvent {}
 class OnGettingMovieDetailsByIdEvent extends MoviesEvent {
   final String id;
 
-  OnGettingMovieDetailsByIdEvent(this.id);
+  OnGettingMovieDetailsByIdEvent(
+    this.id,
+  );
 }

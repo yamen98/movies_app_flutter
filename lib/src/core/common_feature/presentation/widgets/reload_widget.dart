@@ -7,14 +7,22 @@ class ReloadWidget extends StatelessWidget {
   final String content;
   final VoidCallback? onPressed;
   final String image;
+  final Color? iconColor;
 
-  const ReloadWidget.empty({Key? key, required this.content, this.onPressed})
-      : image = "assets/svg_images/no_data.svg",
+  const ReloadWidget.empty({
+    Key? key,
+    required this.content,
+    this.onPressed,
+    this.iconColor,
+  })  : image = "assets/svg_images/no_data.svg",
         super(key: key);
 
-  const ReloadWidget.error(
-      {Key? key, required this.content, required this.onPressed})
-      : image = "assets/svg_images/error.svg",
+  const ReloadWidget.error({
+    Key? key,
+    required this.content,
+    required this.onPressed,
+    this.iconColor,
+  })  : image = "assets/svg_images/error.svg",
         super(key: key);
 
   @override
@@ -41,7 +49,7 @@ class ReloadWidget extends StatelessWidget {
           if (onPressed != null)
             Icon(
               Icons.refresh,
-              color: Theme.of(context).iconTheme.color,
+              color: iconColor ?? AppColors.black,
             ),
         ],
       ),

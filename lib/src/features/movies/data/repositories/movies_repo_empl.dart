@@ -35,7 +35,8 @@ class MoviesRepositoryImpl extends MoviesRepository {
 
   /// Get movie details by id method
   @override
-  Future<Either<Failure, MovieDetailsModel?>> getMovieDetailsById(MovieDetailsParams params) async{
+  Future<Either<Failure, MovieDetailsModel?>> getMovieDetailsById(
+      MovieDetailsParams params) async {
     try {
       final result = await moviesApi.getMovieDetailsById(params);
       return result.fold((l) {

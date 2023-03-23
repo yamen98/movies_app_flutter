@@ -8,15 +8,15 @@ class CachedImageWidget extends StatelessWidget {
   final double? width;
   final String? imageUrl;
   final double? radius;
+  final GlobalKey _backgroundImageKey = GlobalKey();
 
-  const CachedImageWidget(
-      {Key? key,
-      this.width,
-      this.height,
-      required this.imageUrl,
-      this.radius,
-      })
-      : super(key: key);
+  CachedImageWidget({
+    Key? key,
+    this.width,
+    this.height,
+    required this.imageUrl,
+    this.radius,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +30,14 @@ class CachedImageWidget extends StatelessWidget {
         width: width,
         child: imageUrl != null && imageUrl != ""
             ? CachedNetworkImage(
+                key: _backgroundImageKey,
                 imageUrl: imageUrl ?? "",
                 height: height,
                 width: width,
                 fit: BoxFit.cover,
                 errorWidget: (context, url, error) => Image.asset(
                   Helper.getImagePath("no_image.jpg"),
-                  fit: BoxFit.contain,
+                  fit: BoxFit.fill,
                 ),
               )
             : Image.asset(

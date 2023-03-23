@@ -96,6 +96,9 @@ dependencies:
   # Device preview to test app in all devices
   device_preview: ^1.1.0
 
+  # Ratting star
+  flutter_rating_bar: ^4.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

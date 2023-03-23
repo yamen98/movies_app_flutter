@@ -1,3 +1,4 @@
+import 'package:movies_app/src/core/common_feature/domain/entities/language_enum.dart';
 import 'package:movies_app/src/core/util/constant/local_storage_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -7,12 +8,16 @@ class AppSharedPrefs {
   AppSharedPrefs(this._preferences);
 
   /// __________ Language __________ ///
-  String? getLang() {
-    return _preferences.getString(lang);
+  LanguageEnum? getLang() {
+    String? data = _preferences.getString(lang);
+    if (data == null) {
+      return LanguageEnum.en;
+    }
+    return LanguageEnum.values.firstWhere((element) => element.local == data);
   }
 
-  void setLang(String local) {
-    _preferences.setString(lang, local);
+  void setLang(LanguageEnum language) {
+    _preferences.setString(lang, language.local);
   }
 
   /// __________ Dark Theme __________ ///

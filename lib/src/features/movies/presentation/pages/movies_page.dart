@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:movies_app/src/core/common_feature/domain/entities/movie_filter_model.dart';
 import 'package:movies_app/src/core/common_feature/presentation/widgets/app_loader.dart';
+import 'package:movies_app/src/core/common_feature/presentation/widgets/app_snack_bar.dart';
+import 'package:movies_app/src/core/common_feature/presentation/widgets/button_widget.dart';
 import 'package:movies_app/src/core/common_feature/presentation/widgets/custom_clipper_path.dart';
+import 'package:movies_app/src/core/common_feature/presentation/widgets/drawer_widget.dart';
 import 'package:movies_app/src/core/common_feature/presentation/widgets/reload_widget.dart';
 import 'package:movies_app/src/core/common_feature/presentation/widgets/text_field_widget.dart';
 import 'package:movies_app/src/core/styles/app_colors.dart';
 import 'package:movies_app/src/core/translations/l10n.dart';
 import 'package:movies_app/src/core/util/constant/app_constants.dart';
+import 'package:movies_app/src/core/util/helper.dart';
 import 'package:movies_app/src/features/movies/domain/entities/movies_model.dart';
 import 'package:movies_app/src/features/movies/presentation/bloc/movies_bloc.dart';
 import 'package:movies_app/src/features/movies/presentation/widget/movie_card_shimmer_widget.dart';
@@ -35,6 +40,16 @@ class _MoviesPageState extends State<MoviesPage> {
   int page = 1;
   String totalResult = "0";
 
+  String? selectedMovieType;
+
+  List<String> movieTypes = ["movie", "series", "episode"];
+
+  // Initial filter with null value to movie type and year
+  MovieFilterModel filter = MovieFilterModel();
+  TextEditingController _yearTextField = TextEditingController();
+
+  GlobalKey<ScaffoldState> _key = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -43,27 +58,107 @@ class _MoviesPageState extends State<MoviesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _key,
       appBar: AppBar(
         toolbarHeight: 100.sp,
         elevation: 0,
         automaticallyImplyLeading: false,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         flexibleSpace: ClipPath(
           clipper: CustomClipperPath(),
           child: Container(
             height: 150.sp,
             width: ScreenUtil().screenWidth,
-            color: AppColors.primaryColor,
+            color: Helper.isDarkTheme()
+                ? AppColors.orange.withOpacity(0.5)
+                : AppColors.primaryColor,
             child: Center(
-              child: Text(
-                S.of(context).explorer,
-                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                      color: AppColors.white,
-                      fontWeight: FontWeight.bold,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15.sp),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Menu
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () {
+                        _key.currentState!.openDrawer();
+                      },
+                      child: Icon(
+                        Icons.menu,
+                        color: AppColors.white,
+                        size: 30,
+                      ),
                     ),
+
+                    Text(
+                      S.of(context).explorer,
+                      style:
+                          Theme.of(context).textTheme.headlineMedium!.copyWith(
+                                color: AppColors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                    ),
+
+                    // Filters
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        late Function(void Function()) showUpperSheetState;
+
+                        Helper.showUpperSheetModal(
+                          context,
+                          [
+                            StatefulBuilder(builder: (context, setState) {
+                              showUpperSheetState = setState;
+                              return _buildFilterWidgets(showUpperSheetState);
+                            }),
+                          ],
+                          reset: () {
+                            showUpperSheetState(() {
+                              selectedMovieType = null;
+                              _yearTextField.clear();
+                              filter = MovieFilterModel();
+                            });
+                          },
+                          confirm: () {
+                            filter.movieType = selectedMovieType;
+                            filter.year = _yearTextField.text.trim().isEmpty
+                                ? null
+                                : _yearTextField.text.trim();
+                            if (_searchTextField.text.trim().length >= 3) {
+                              _bloc.add(
+                                OnGettingMoviesEvent(
+                                  _searchTextField.text.trim(),
+                                  page,
+                                  filter,
+                                ),
+                              );
+                            } else {
+                              Helper.showSnackBar(context,
+                                  S.of(context).type_in_search_to_filter,
+                                  type: ToastTypeEnum.info);
+                            }
+                          },
+                        );
+                      },
+                      child: Icon(
+                        Icons.filter_alt,
+                        color: AppColors.white,
+                        size: 30,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
+      ),
+      drawer: Drawer(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        child: DrawerWidget(),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 15.sp),
@@ -77,16 +172,19 @@ class _MoviesPageState extends State<MoviesPage> {
                 if (state is ClearSearchTextFieldState) {
                   _searchTextField.clear();
                   page = 1;
+                  setState(() {
+                    movies.clear();
+                  });
                 }
               },
               builder: (context, state) {
                 return TextFieldWidget(
                   controller: _searchTextField,
-                  hintText: S.of(context).search,
+                  hintText: S.of(context).type_to_search,
                   prefixIcon: Icon(
                     Icons.search,
                     size: Theme.of(context).iconTheme.size,
-                    color: AppColors.primaryColor,
+                    color: AppColors.lightGray,
                   ),
                   suffixIcon: _searchTextField.text.isEmpty
                       ? null
@@ -98,7 +196,7 @@ class _MoviesPageState extends State<MoviesPage> {
                           child: Icon(
                             Icons.close,
                             size: Theme.of(context).iconTheme.size,
-                            color: AppColors.primaryColor,
+                            color: AppColors.lightGray,
                           ),
                         ),
                   onChanged: (value) {
@@ -108,8 +206,13 @@ class _MoviesPageState extends State<MoviesPage> {
                           OnGettingMoviesEvent(
                             value.trim(),
                             page,
+                            filter,
                           ),
                         );
+                      } else {
+                        if (value.trim().isEmpty) {
+                          _bloc.add(OnClearingSearchTextFieldEvent());
+                        }
                       }
                     }
                     setState(() {});
@@ -192,6 +295,7 @@ class _MoviesPageState extends State<MoviesPage> {
                           OnGettingMoviesEvent(
                             _searchTextField.text.trim(),
                             page,
+                            filter,
                           ),
                         );
                       },
@@ -209,7 +313,7 @@ class _MoviesPageState extends State<MoviesPage> {
                     enablePullDown: true,
                     enablePullUp: true,
                     header: WaterDropHeader(
-                      waterDropColor: AppColors.primaryColor,
+                      waterDropColor: Theme.of(context).cardColor,
                     ),
                     footer: CustomFooter(
                       builder: (BuildContext context, LoadStatus? mode) {
@@ -282,6 +386,7 @@ class _MoviesPageState extends State<MoviesPage> {
       OnGettingMoviesEvent(
         _searchTextField.text.trim(),
         page,
+        filter,
       ),
     );
   }
@@ -296,11 +401,81 @@ class _MoviesPageState extends State<MoviesPage> {
         OnGettingMoviesEvent(
           _searchTextField.text.trim(),
           page,
+          filter,
           isLoadingMore: true,
         ),
       );
     } else {
       _refreshController.loadNoData();
     }
+  }
+
+  Widget _buildFilterWidgets(showUpperSheetState) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Movie type title
+        Text(
+          S.of(context).movie_type,
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+
+        SizedBox(
+          height: 10.h,
+        ),
+
+        // List of options
+        SizedBox(
+            width: double.infinity,
+            child: Wrap(
+              children: [
+                for (int i = 0; i < movieTypes.length; i++) ...{
+                  Container(
+                    margin: EdgeInsets.all(6.w),
+                    child: ButtonWidget(
+                      text: Helper.getMovieTypeTitle(movieTypes[i]),
+                      onPressed: () {
+                        showUpperSheetState(() {
+                          selectedMovieType = movieTypes[i];
+                        });
+                      },
+                      textStyle:
+                          Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: selectedMovieType == movieTypes[i]
+                                    ? AppColors.white
+                                    : null,
+                              ),
+                      borderColor: selectedMovieType == movieTypes[i]
+                          ? Theme.of(context).cardColor
+                          : Theme.of(context).iconTheme.color!,
+                      backgroundColor: selectedMovieType == movieTypes[i]
+                          ? Theme.of(context).cardColor
+                          : AppColors.transparent,
+                    ),
+                  ),
+                }
+              ],
+            )),
+
+        SizedBox(
+          height: 10.h,
+        ),
+
+        // Year text field
+        TextFieldWidget(
+          controller: _yearTextField,
+          hintText: S.of(context).enter_year,
+          hintStyle: Theme.of(context).textTheme.bodyMedium,
+          keyboardType: TextInputType.number,
+        ),
+
+        SizedBox(
+          height: 10.h,
+        ),
+      ],
+    );
   }
 }

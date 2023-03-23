@@ -32,7 +32,7 @@ class ParallaxFlowDelegate extends FlowDelegate {
     // scrollable area.
     final viewportDimension = scrollable.position.viewportDimension;
     final scrollFraction =
-    (listItemOffset.dy / viewportDimension).clamp(0.0, 1.0);
+        (listItemOffset.dy / viewportDimension).clamp(0.0, 1.0);
 
     // Calculate the vertical alignment of the background
     // based on the scroll percent.
@@ -45,13 +45,13 @@ class ParallaxFlowDelegate extends FlowDelegate {
             .size;
     final listItemSize = context.size;
     final childRect =
-    verticalAlignment.inscribe(backgroundSize, Offset.zero & listItemSize);
+        verticalAlignment.inscribe(backgroundSize, Offset.zero & listItemSize);
 
     // Paint the background.
     context.paintChild(
       0,
       transform:
-      Transform.translate(offset: Offset(0.0, childRect.top)).transform,
+          Transform.translate(offset: Offset(0.0, childRect.top)).transform,
     );
   }
 
@@ -132,7 +132,7 @@ class RenderParallax extends RenderBox
     // and then scale its height based on the image's aspect ratio.
     final background = child!;
     final backgroundImageConstraints =
-    BoxConstraints.tightFor(width: size.width);
+        BoxConstraints.tightFor(width: size.width);
     background.layout(backgroundImageConstraints, parentUsesSize: true);
 
     // Set the background's local offset, which is zero.
@@ -147,12 +147,12 @@ class RenderParallax extends RenderBox
     // Calculate the global position of this list item.
     final scrollableBox = scrollable.context.findRenderObject() as RenderBox;
     final backgroundOffset =
-    localToGlobal(size.centerLeft(Offset.zero), ancestor: scrollableBox);
+        localToGlobal(size.centerLeft(Offset.zero), ancestor: scrollableBox);
 
     // Determine the percent position of this list item within the
     // scrollable area.
     final scrollFraction =
-    (backgroundOffset.dy / viewportDimension).clamp(0.0, 1.0);
+        (backgroundOffset.dy / viewportDimension).clamp(0.0, 1.0);
 
     // Calculate the vertical alignment of the background
     // based on the scroll percent.
@@ -164,7 +164,7 @@ class RenderParallax extends RenderBox
     final backgroundSize = background.size;
     final listItemSize = size;
     final childRect =
-    verticalAlignment.inscribe(backgroundSize, Offset.zero & listItemSize);
+        verticalAlignment.inscribe(backgroundSize, Offset.zero & listItemSize);
 
     // Paint the background.
     context.paintChild(

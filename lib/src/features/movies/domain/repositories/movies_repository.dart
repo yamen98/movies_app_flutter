@@ -10,5 +10,6 @@ abstract class MoviesRepository {
   Future<Either<Failure, MoviesResponseModel>> movies(MoviesParams params);
 
   // Get movie details by id
-  Future<Either<Failure, MovieDetailsModel?>> getMovieDetailsById(MovieDetailsParams params);
+  Future<Either<Failure, MovieDetailsModel?>> getMovieDetailsById(
+      MovieDetailsParams params);
 }

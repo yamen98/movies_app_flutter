@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:movies_app/src/core/common_feature/domain/entities/movie_filter_model.dart';
 import 'package:movies_app/src/core/network/error/failures.dart';
 import 'package:movies_app/src/core/util/injections.dart';
 import 'package:movies_app/src/features/movies/domain/entities/movie_details_model.dart';
@@ -34,9 +35,9 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
 
     final result = await moviesUseCase.call(
       MoviesParams(
-        textToSearch: event.textToSearch,
-        page: event.page,
-      ),
+          textToSearch: event.textToSearch,
+          page: event.page,
+          filter: event.filterModel),
     );
     result.fold((l) {
       if (l is CancelTokenFailure) {
@@ -73,7 +74,7 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
       ),
     );
     result.fold((l) {
-      emitter(ErrorGetMoviesState(l.errorMessage));
+      emitter(ErrorGetMovieDetailsByIdState(l.errorMessage));
     }, (r) {
       emitter(
         SuccessGetMovieDetailsByIdState(r),

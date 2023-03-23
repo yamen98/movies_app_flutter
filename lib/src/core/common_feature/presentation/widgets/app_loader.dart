@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AppLoader extends StatelessWidget {
+  final Color? iconColor;
+
   const AppLoader({
     Key? key,
+    this.iconColor,
   }) : super(key: key);
 
   @override
@@ -16,7 +19,7 @@ class AppLoader extends StatelessWidget {
             itemBuilder: (BuildContext context, int index) {
               return DecoratedBox(
                 decoration: BoxDecoration(
-                    color: AppColors.primaryColor,
+                    color: iconColor ?? AppColors.primaryColor,
                     borderRadius: BorderRadius.circular(25)),
               );
             },

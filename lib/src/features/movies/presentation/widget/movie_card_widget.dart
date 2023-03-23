@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movies_app/src/core/common_feature/presentation/widgets/app_flow_delegate.dart';
 import 'package:movies_app/src/core/common_feature/presentation/widgets/cached_image_widget.dart';
 import 'package:movies_app/src/core/util/constant/app_constants.dart';
@@ -23,18 +24,22 @@ class _MovieCardWidgetState extends State<MovieCardWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: AspectRatio(
-        aspectRatio: 16 / 9,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: Stack(
-            children: [
-              _buildParallaxBackground(context),
-              _buildGradientShadow(),
-              _buildTitleAndDate(),
-            ],
+    // Keep direction to ltr because data is english
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: SizedBox(
+        height: 300.h,
+        child: GestureDetector(
+          onTap: widget.onTap,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: Stack(
+              children: [
+                _buildParallaxBackground(context),
+                _buildGradientShadow(),
+                _buildTitleAndDate(),
+              ],
+            ),
           ),
         ),
       ),

@@ -90,11 +90,11 @@ class S {
     );
   }
 
-  /// `Search`
-  String get search {
+  /// `Type to Search`
+  String get type_to_search {
     return Intl.message(
-      'Search',
-      name: 'search',
+      'Type to Search',
+      name: 'type_to_search',
       desc: '',
       args: [],
     );
@@ -155,6 +155,146 @@ class S {
     return Intl.message(
       'No Data!',
       name: 'no_data',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ratings`
+  String get ratings {
+    return Intl.message(
+      'Ratings',
+      name: 'ratings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Actors`
+  String get actors {
+    return Intl.message(
+      'Actors',
+      name: 'actors',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Country`
+  String get country {
+    return Intl.message(
+      'Country',
+      name: 'country',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Language`
+  String get language {
+    return Intl.message(
+      'Language',
+      name: 'language',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reset`
+  String get reset {
+    return Intl.message(
+      'Reset',
+      name: 'reset',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm`
+  String get confirm {
+    return Intl.message(
+      'Confirm',
+      name: 'confirm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Movie`
+  String get movie {
+    return Intl.message(
+      'Movie',
+      name: 'movie',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Series`
+  String get series {
+    return Intl.message(
+      'Series',
+      name: 'series',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Episode`
+  String get episode {
+    return Intl.message(
+      'Episode',
+      name: 'episode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Movie Type`
+  String get movie_type {
+    return Intl.message(
+      'Movie Type',
+      name: 'movie_type',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Type in search field to complete filtering process`
+  String get type_in_search_to_filter {
+    return Intl.message(
+      'Type in search field to complete filtering process',
+      name: 'type_in_search_to_filter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter Year`
+  String get enter_year {
+    return Intl.message(
+      'Enter Year',
+      name: 'enter_year',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dark Skin`
+  String get dark_skin {
+    return Intl.message(
+      'Dark Skin',
+      name: 'dark_skin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Light Skin`
+  String get light_skin {
+    return Intl.message(
+      'Light Skin',
+      name: 'light_skin',
       desc: '',
       args: [],
     );

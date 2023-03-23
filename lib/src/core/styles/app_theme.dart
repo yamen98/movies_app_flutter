@@ -2,12 +2,15 @@ import 'package:movies_app/src/core/styles/app_text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 
 import 'app_colors.dart';
 
 /// Light theme
 final ThemeData appTheme = ThemeData(
+  dialogBackgroundColor: AppColors.lightGray,
+  cardColor: AppColors.primaryColor,
+
   appBarTheme: AppBarTheme(
     // shadowColor: AppColors.lightGray,
     color: AppColors.white,
@@ -20,7 +23,7 @@ final ThemeData appTheme = ThemeData(
     ).titleLarge,
     systemOverlayStyle: SystemUiOverlayStyle.light,
   ),
-  fontFamily: GoogleFonts.chakraPetch().fontFamily,
+  // fontFamily: GoogleFonts.chakraPetch().fontFamily,
   scaffoldBackgroundColor: AppColors.white,
   iconTheme: const IconThemeData(color: AppColors.black, size: 25),
   textTheme: const TextTheme(
@@ -47,6 +50,7 @@ final ThemeData appTheme = ThemeData(
   colorScheme:
       ColorScheme.fromSwatch().copyWith(secondary: AppColors.primaryColor),
   inputDecorationTheme: InputDecorationTheme(
+      fillColor: AppColors.transparent,
       contentPadding: EdgeInsets.symmetric(
         horizontal: 10.sp,
       ),
@@ -64,6 +68,8 @@ final ThemeData appTheme = ThemeData(
 
 /// Dark theme
 final ThemeData darkAppTheme = ThemeData(
+  dialogBackgroundColor: AppColors.primaryColor,
+  cardColor: AppColors.orange.withOpacity(0.5),
   appBarTheme: AppBarTheme(
     shadowColor: AppColors.white,
     color: AppColors.darkGray,
@@ -76,8 +82,9 @@ final ThemeData darkAppTheme = ThemeData(
     ).titleLarge,
     systemOverlayStyle: SystemUiOverlayStyle.light,
   ),
-  fontFamily: GoogleFonts.chakraPetch().fontFamily,
-  scaffoldBackgroundColor: AppColors.darkGray,
+  // fontFamily: GoogleFonts.chakraPetch().fontFamily,
+  scaffoldBackgroundColor: AppColors.primaryColor,
+
   iconTheme: const IconThemeData(color: AppColors.white, size: 25),
   textTheme: const TextTheme(
     headlineLarge: AppTextStyle.xxLargeWhite,
@@ -106,16 +113,16 @@ final ThemeData darkAppTheme = ThemeData(
       horizontal: 10.w,
     ),
     filled: true,
-    fillColor: AppColors.darkGray,
+    fillColor: AppColors.transparent,
     border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10.sp),
-        borderSide: const BorderSide(color: AppColors.darkGray, width: 1)),
+        borderSide: const BorderSide(color: AppColors.lightGray, width: 1)),
     enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10.sp),
-        borderSide: const BorderSide(color: AppColors.darkGray, width: 1)),
+        borderSide: const BorderSide(color: AppColors.lightGray, width: 1)),
     focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10.sp),
-        borderSide: const BorderSide(color: AppColors.darkGray, width: 1)),
+        borderSide: const BorderSide(color: AppColors.lightGray, width: 1)),
     errorMaxLines: 2,
   ),
 );

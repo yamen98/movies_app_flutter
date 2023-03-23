@@ -18,14 +18,27 @@ class MoviesApi {
     try {
       cancelToken = CancelToken();
 
+      String url = "s=${params.textToSearch}&page=${params.page}&r=json";
+
+      // If movie type filter is filled
+      if (params.filter.movieType != null) {
+        url += "&type=${params.filter.movieType}";
+      }
+
+      // If movie year filter is filled
+      if (params.filter.year != null) {
+        url += "&y=${params.filter.year}";
+      }
+
       final result = (await DioNetwork.appAPI.get(
-        "s=${params.textToSearch}&page=${params.page}",
+        url,
         cancelToken: cancelToken,
       ))
           .data;
       if (result['Response'].toString().toLowerCase() == "false") {
-        if (result['Error'].toString().toLowerCase() ==
-            "Movie not found!".toLowerCase()) {
+        if (result['Error'].toString().toLowerCase().contains(
+              "not found!".toLowerCase(),
+            )) {
           return Right(
             MoviesResponseModel(
               search: [],
@@ -61,13 +74,14 @@ class MoviesApi {
       cancelToken = CancelToken();
 
       final result = (await DioNetwork.appAPI.get(
-        "i=${params.movieId}",
+        "i=${params.movieId}&r=json",
         cancelToken: cancelToken,
       ))
           .data;
       if (result['Response'].toString().toLowerCase() == "false") {
-        if (result['Error'].toString().toLowerCase() ==
-            "Movie not found!".toLowerCase()) {
+        if (result['Error'].toString().toLowerCase().contains(
+              "not found!".toLowerCase(),
+            )) {
           return Right(null);
         } else {
           return Left(

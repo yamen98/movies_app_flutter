@@ -7,8 +7,11 @@ import 'package:flutter/material.dart';
 
 class ArrowBackButtonWidget extends StatelessWidget {
   final Function()? callback;
+  final Color iconColor;
 
-  const ArrowBackButtonWidget({Key? key, this.callback}) : super(key: key);
+  const ArrowBackButtonWidget(
+      {Key? key, this.callback, required this.iconColor})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +26,7 @@ class ArrowBackButtonWidget extends StatelessWidget {
         padding: EdgeInsets.zero,
         icon: Icon(
           Icons.arrow_back,
-          color: Theme.of(context).iconTheme.color,
+          color: iconColor,
         ),
       ),
     );
