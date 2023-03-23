@@ -3,8 +3,7 @@ name: Generate apk for QA
 
 on:
   push:
-    tags:
-      - '*'
+      - main
 
   workflow_dispatch:
 
