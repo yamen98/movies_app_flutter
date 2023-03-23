@@ -32,27 +32,6 @@ jobs:
       - run: flutter precache
       - run: flutter pub get
 
-      - name: Download Android keystore
-        id: android_keystore
-        uses: timheuer/base64-to-file@v1.0.3
-        with:
-          fileName: key.jks
-          encodedString: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-
-      - name: Create key.properties
-        run: |
-          echo "storeFile=${{ steps.android_keystore.outputs.filePath }}" > android/key.properties
-          echo "storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" >> android/key.properties
-          echo "keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}" >> android/key.properties
-          echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
-      - name: Get tag
-        id: tag
-        uses: dawidd6/action-get-tag@v1
-        with:
-          strip_v: true
-      - name: Use tag
-        run: echo ${{steps.tag.outputs.tag}}
-
       - name: Build Android APK
         run: flutter build apk --split-per-abi
 
