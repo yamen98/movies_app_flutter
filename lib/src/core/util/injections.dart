@@ -27,10 +27,6 @@ initSharedPrefsInjections() async {
   await sl.isReady<SharedPreferences>();
 }
 
-Future<void> onUnexpectedError(ErrorInterceptorHandler handler, error) async {
-  handler.reject(error);
-  navigatorKey.currentState?.pushReplacementNamed("/login");
-}
 
 Future<void> initCoreInjections() async {
   initRootLogger();

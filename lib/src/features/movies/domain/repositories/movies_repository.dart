@@ -7,9 +7,12 @@ import 'package:dartz/dartz.dart';
 
 abstract class MoviesRepository {
   // Get all movies by filter
-  Future<Either<Failure, MoviesResponseModel>> movies(MoviesParams params);
+  Future<Either<Failure, MoviesResponseModel>> movies(
+    MoviesParams params,
+  );
 
   // Get movie details by id
   Future<Either<Failure, MovieDetailsModel?>> getMovieDetailsById(
-      MovieDetailsParams params);
+    MovieDetailsParams params,
+  );
 }

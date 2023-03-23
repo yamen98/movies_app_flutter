@@ -1,5 +1,5 @@
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movies_app/src/core/util/helper.dart';
-import 'package:movies_app/src/features/intro/presentation/bloc/intro_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -11,12 +11,16 @@ class IntroPage extends StatefulWidget {
 }
 
 class _IntroPageState extends State<IntroPage> {
-  late IntroBloc bloc;
-
   @override
   void initState() {
-    bloc = IntroBloc();
-    bloc.add(OnGettingDataEvent());
+    Future.delayed(
+      Duration(
+        seconds: 1,
+      ),
+      () {
+        Navigator.pushNamed(context, "/movies_page");
+      },
+    );
     super.initState();
   }
 
@@ -26,8 +30,8 @@ class _IntroPageState extends State<IntroPage> {
       body: Center(
         child: Padding(
           padding: EdgeInsets.all(15.sp),
-          child: Image.asset(
-            Helper.getImagePath("logo.jpg"),
+          child: SvgPicture.asset(
+            Helper.getSvgPath("logo.svg"),
             width: 100.w,
             height: 100.h,
           ),

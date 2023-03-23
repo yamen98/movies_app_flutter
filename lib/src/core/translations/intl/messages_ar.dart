@@ -48,6 +48,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "required_field": MessageLookupByLibrary.simpleMessage("الحقل مطلوب"),
         "reset": MessageLookupByLibrary.simpleMessage("تهيئة"),
         "series": MessageLookupByLibrary.simpleMessage("مسلسل"),
+        "start_search":
+            MessageLookupByLibrary.simpleMessage("ابدا برحلة البحث عن الأفلام"),
         "type_in_search_to_filter": MessageLookupByLibrary.simpleMessage(
             "اكتب في حقل البحث لإكمال عملية الفتلرة"),
         "type_to_search": MessageLookupByLibrary.simpleMessage("اكتب للبحث")

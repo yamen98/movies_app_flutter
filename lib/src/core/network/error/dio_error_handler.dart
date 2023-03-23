@@ -18,12 +18,10 @@ String handleDioError(DioError error) {
       break;
     case DioErrorType.badResponse:
       {
-        /// From golex server response
         if (error.response?.data['code'] != null &&
             (error.response?.data['code'] ?? "0") != "0") {
           errorDescription = error.response?.data['msg'];
         } else {
-          /// From our server response
           if (error.response?.statusCode == 200 &&
               ("${(error.response?.data["statusCode"] ?? "0")}" != "0")) {
             if ((error.response?.data["message"] ?? "") != "") {

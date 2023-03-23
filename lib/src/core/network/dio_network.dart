@@ -54,7 +54,7 @@ class DioNetwork {
         appAPI.options.headers = headers;
 
         sl<LogController>()
-            .log(LogTags.request, json.encode(options.data), LogLevel.INFO);
+            .log(LogTags.request, json.encode(options.queryParameters), LogLevel.INFO);
         return r.next(options);
       },
       onError: (error, handler) async {
@@ -85,6 +85,8 @@ class DioNetwork {
         options.headers = headers;
         appAPI.options.headers = headers;
 
+        sl<LogController>()
+            .log(LogTags.request, json.encode(options.queryParameters), LogLevel.INFO);
         return r.next(options);
       },
       onResponse: (response, handler) async {

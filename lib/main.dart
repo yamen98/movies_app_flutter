@@ -11,6 +11,7 @@ import 'package:movies_app/src/core/translations/l10n.dart';
 import 'package:movies_app/src/core/util/helper.dart';
 import 'package:movies_app/src/core/util/injections.dart';
 import 'package:movies_app/src/core/util/router.dart';
+import 'package:movies_app/src/features/intro/presentation/pages/intro_page.dart';
 
 import 'src/core/common_feature/domain/entities/language_enum.dart';
 import 'src/features/movies/presentation/pages/movies_page.dart';
@@ -87,7 +88,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
             builder: (context, child) {
               return MaterialApp(
                 useInheritedMediaQuery: false,
-                title: 'Clinic',
+                title: 'Movies App',
                 scaffoldMessengerKey: snackbarKey,
                 onGenerateRoute: AppRouter.generateRoute,
                 theme: Helper.isDarkTheme() ? darkAppTheme : appTheme,
@@ -105,11 +106,9 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                   Locale("ar"),
                   Locale("en"),
                 ],
-                home: const MoviesPage(),
-                // initialRoute: "/movies_page",
+                home: const IntroPage(),
               );
             },
-            // child: const MoviesPage(),
           );
         },
       ),
@@ -117,6 +116,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   }
 }
 
+// App notifier for Lang, Theme, ...
 class AppNotifier extends ChangeNotifier {
   late bool darkTheme;
 

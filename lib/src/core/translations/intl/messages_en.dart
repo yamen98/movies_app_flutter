@@ -48,6 +48,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Required Field"),
         "reset": MessageLookupByLibrary.simpleMessage("Reset"),
         "series": MessageLookupByLibrary.simpleMessage("Series"),
+        "start_search": MessageLookupByLibrary.simpleMessage(
+            "Start your search for movies"),
         "type_in_search_to_filter": MessageLookupByLibrary.simpleMessage(
             "Type in search field to complete filtering process"),
         "type_to_search": MessageLookupByLibrary.simpleMessage("Type to Search")

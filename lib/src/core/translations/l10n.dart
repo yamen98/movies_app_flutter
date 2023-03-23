@@ -299,6 +299,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Start your search for movies`
+  String get start_search {
+    return Intl.message(
+      'Start your search for movies',
+      name: 'start_search',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

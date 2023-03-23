@@ -1,10 +1,5 @@
-import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:movies_app/main.dart';
 import 'package:movies_app/src/core/common_feature/domain/entities/language_enum.dart';
-import 'package:movies_app/src/core/common_feature/domain/entities/login_by_enum.dart';
 import 'package:movies_app/src/core/common_feature/presentation/widgets/app_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,6 +8,7 @@ import 'package:movies_app/src/core/common_feature/presentation/widgets/arrow_ba
 import 'package:movies_app/src/core/common_feature/presentation/widgets/button_widget.dart';
 import 'package:movies_app/src/core/styles/app_colors.dart';
 import 'package:movies_app/src/core/translations/l10n.dart';
+import 'package:movies_app/src/core/util/constant/app_constants.dart';
 
 import '../common_feature/data/data_sources/app_shared_prefs.dart';
 import 'injections.dart';
@@ -28,12 +24,12 @@ class Helper {
 
   /// Get svg picture path
   static String getSvgPath(String name) {
-    return "assets/svg/$name";
+    return "$svgPath$name";
   }
 
   /// Get image picture path
   static String getImagePath(String name) {
-    return "assets/images/$name";
+    return "$imagePath$name";
   }
 
   /// Get vertical space
@@ -46,10 +42,6 @@ class Helper {
     return 10.w;
   }
 
-  static formatDate(DateTime date) {
-    final formatted = DateFormat('yyyy-MM-dd');
-    return formatted.format(date);
-  }
 
   /// Show snack bar message
   static showSnackBar(BuildContext context, String message,
@@ -57,32 +49,6 @@ class Helper {
     Future.delayed(const Duration(seconds: 0), () {
       AppSnackBar.show(context, message, type);
     });
-  }
-
-  /// Show custom dialog with specific page
-  static Future showCustomDialog(BuildContext context, Widget child,
-      {EdgeInsets? margin,
-      bool barrierDismissible = true,
-      Color? backgroundColor}) async {
-    return showDialog(
-      context: context,
-      useSafeArea: true,
-      barrierDismissible: barrierDismissible,
-      builder: (ctx) => Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: backgroundColor ?? Theme.of(context).dialogBackgroundColor,
-            ),
-            margin: margin ?? EdgeInsets.symmetric(horizontal: 100.w),
-            child: child,
-          ),
-        ],
-      ),
-    );
   }
 
   /// Get Dio Header

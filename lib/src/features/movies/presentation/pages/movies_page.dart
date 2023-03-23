@@ -58,6 +58,8 @@ class _MoviesPageState extends State<MoviesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+
       key: _key,
       appBar: AppBar(
         toolbarHeight: 100.sp,
@@ -82,6 +84,7 @@ class _MoviesPageState extends State<MoviesPage> {
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
                       onTap: () {
+                        FocusManager.instance.primaryFocus?.unfocus();
                         _key.currentState!.openDrawer();
                       },
                       child: Icon(
@@ -169,7 +172,7 @@ class _MoviesPageState extends State<MoviesPage> {
             BlocConsumer<MoviesBloc, MoviesState>(
               bloc: _bloc,
               listener: (context, state) {
-                if (state is ClearSearchTextFieldState) {
+                if (state is MoviesInitial) {
                   _searchTextField.clear();
                   page = 1;
                   setState(() {
@@ -226,7 +229,7 @@ class _MoviesPageState extends State<MoviesPage> {
               height: 10.h,
             ),
 
-            // Featured Movies
+            // Featured movies title
             if (!movies.isEmpty)
               Text(
                 S.of(context).all_movies,
@@ -243,11 +246,6 @@ class _MoviesPageState extends State<MoviesPage> {
             Expanded(
               child: BlocConsumer(
                 bloc: _bloc,
-                buildWhen: (previous, current) {
-                  return current is SuccessGetMoviesState ||
-                      current is ErrorGetMoviesState ||
-                      current is LoadingGetMoviesState;
-                },
                 listener: (context, state) {
                   if (state is SuccessGetMoviesState) {
                     totalResult = state.moviesResult.totalResults;
@@ -274,6 +272,11 @@ class _MoviesPageState extends State<MoviesPage> {
                   }
                 },
                 builder: (context, state) {
+                  if(state is MoviesInitial){
+                    return ReloadWidget.empty(
+                      content: S.of(context).start_search,
+                    );
+                  }
                   if (state is LoadingGetMoviesState) {
                     return ListView.separated(
                       itemCount: perPage,
@@ -323,7 +326,9 @@ class _MoviesPageState extends State<MoviesPage> {
                             S.of(context).pull_up_load,
                           );
                         } else if (mode == LoadStatus.loading) {
-                          body = AppLoader();
+                          body = AppLoader(
+                            iconColor: Theme.of(context).iconTheme.color,
+                          );
                         } else if (mode == LoadStatus.failed) {
                           body = Text(
                             S.of(context).load_failed,

@@ -3,7 +3,6 @@ import 'package:movies_app/src/core/common_feature/domain/entities/movie_filter_
 import 'package:movies_app/src/core/network/error/failures.dart';
 import 'package:movies_app/src/core/util/injections.dart';
 import 'package:movies_app/src/features/movies/domain/entities/movie_details_model.dart';
-import 'package:movies_app/src/features/movies/domain/entities/movies_model.dart';
 import 'package:movies_app/src/features/movies/domain/entities/movies_response_model.dart';
 import 'package:movies_app/src/features/movies/domain/usecases/movie_details_usecase.dart';
 import 'package:movies_app/src/features/movies/domain/usecases/movies_usecase.dart';
@@ -60,7 +59,7 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
   /// Clear search text field event
   _onClearingSearchTextFieldEvent(OnClearingSearchTextFieldEvent event,
       Emitter<MoviesState> emitter) async {
-    emitter(ClearSearchTextFieldState());
+    emitter(MoviesInitial());
   }
 
   /// Get movie details by id event

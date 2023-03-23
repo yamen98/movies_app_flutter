@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,7 +43,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
           statusBarColor: AppColors.transparent,
         ),
         child: BackgroundPage(
-          backgroundColor: AppColors.primaryColor,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           child: BlocConsumer<MoviesBloc, MoviesState>(
             bloc: _bloc,
             listener: (context, state) {},
@@ -163,7 +162,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                       ),
                     ),
 
-                    // Ratting
+                    // Rating
                     if (movieDetailsModel.imdbRating != notANumber) ...{
                       Positioned(
                         bottom: 0,
@@ -172,7 +171,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                         child: Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: 20.w, vertical: 15),
-                          child: _buildHeaderRattingWidget(movieDetailsModel),
+                          child: _buildHeaderRatingAndAwardWidget(movieDetailsModel),
                         ),
                       ),
                     },
@@ -197,7 +196,8 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                                   ? TextDirection.ltr
                                   : TextDirection.rtl,
                               child: CircleAvatar(
-                                backgroundColor: AppColors.primaryColor,
+                                backgroundColor: Helper.isDarkTheme()?
+                                AppColors.primaryColor:AppColors.orange,
                                 child: ArrowBackButtonWidget(
                                   iconColor: AppColors.white,
                                 ),
@@ -270,10 +270,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                       // Actors
                       if (movieDetailsModel.actors != null &&
                           movieDetailsModel.actors != notANumber) ...{
-                        Directionality(
-                          textDirection: TextDirection.rtl,
-                          child: _buildActors(movieDetailsModel),
-                        )
+                        _buildActors(movieDetailsModel)
                       },
 
                       SizedBox(
@@ -299,8 +296,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
   Widget _buildMovieTitle(String? title) {
     return Text(
       title ?? defaultStr,
-      style: Theme.of(context).textTheme.titleLarge!.copyWith(
-            color: AppColors.white,
+      style: Theme.of(context).textTheme.headlineLarge!.copyWith(
             fontWeight: FontWeight.bold,
           ),
       textAlign: TextAlign.start,
@@ -323,7 +319,6 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
     return Text(
       title,
       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-            color: AppColors.white,
             fontWeight: FontWeight.w400,
           ),
       textAlign: TextAlign.start,
@@ -335,21 +330,21 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
     return Text(
       plot ?? defaultStr,
       style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-            color: AppColors.white,
             fontWeight: FontWeight.normal,
           ),
       textAlign: TextAlign.start,
     );
   }
 
-  // Ratting widget
-  Widget _buildHeaderRattingWidget(MovieDetailsModel movieDetailsModel) {
-    double ratting = double.tryParse(movieDetailsModel.imdbRating ?? "0") ?? 0;
-    double percentage = ratting / 10.0;
+  // Rating widget
+  Widget _buildHeaderRatingAndAwardWidget(MovieDetailsModel movieDetailsModel) {
+    double rating = double.tryParse(movieDetailsModel.imdbRating ?? "0") ?? 0;
+    double percentage = rating / 10.0;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        // Ratings
         RatingBarIndicator(
           rating: 5 * percentage,
           itemBuilder: (context, index) => Icon(
@@ -361,6 +356,8 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
           unratedColor: Colors.amber.withAlpha(50),
           direction: Axis.horizontal,
         ),
+
+        // Awards
         if (movieDetailsModel.awards != notANumber) ...{
           SizedBox(
             width: 5.w,
@@ -369,12 +366,13 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
             child: Text(
               movieDetailsModel.awards.toString(),
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: AppColors.white,
+                color: AppColors.white,
                     fontWeight: FontWeight.bold,
                   ),
               maxLines: 2,
               softWrap: true,
               overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.end,
             ),
           ),
         },
@@ -418,7 +416,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
     }
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SizedBox(
           height: 5.h,
@@ -427,8 +425,10 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
         Text(
           S.of(context).ratings,
           style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                color: AppColors.white,
-              ),
+            fontWeight: FontWeight.bold,
+          ),
+          textDirection: Helper.getLang() == LanguageEnum.ar?
+          TextDirection.rtl:TextDirection.ltr,
         ),
 
         SizedBox(
@@ -449,7 +449,6 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                         movieDetailsModel.ratings[i].source,
                         style:
                             Theme.of(context).textTheme.titleMedium!.copyWith(
-                                  color: AppColors.white,
                                   fontWeight: FontWeight.normal,
                                 ),
                       ),
@@ -491,36 +490,43 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
           Text(
             S.of(context).actors,
             style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                  color: AppColors.white,
-                ),
+              fontWeight: FontWeight.bold,
+            ),
+            textDirection: Helper.getLang() == LanguageEnum.ar?
+            TextDirection.rtl:
+            TextDirection.ltr,
           ),
           SizedBox(
             height: 5.h,
           ),
-          Wrap(
-            spacing: 5.sp,
-            runSpacing: 5.sp,
-            children: [
-              for (int i = 0; i < actors.length; i++) ...{
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
+          Directionality(
+            textDirection: TextDirection.ltr,
+
+            child: Wrap(
+              spacing: 5.sp,
+              runSpacing: 5.sp,
+              children: [
+                for (int i = 0; i < actors.length; i++) ...{
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.orange.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      actors[i],
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                            fontWeight: FontWeight.normal,
+                        color: AppColors.white,
+                          ),
+                    ),
                   ),
-                  decoration: BoxDecoration(
-                    color: AppColors.orange.withOpacity(0.5),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    actors[i],
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                          color: AppColors.white,
-                          fontWeight: FontWeight.normal,
-                        ),
-                  ),
-                ),
-              }
-            ],
+                }
+              ],
+            ),
           ),
         ],
       );
@@ -540,7 +546,6 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
               Text(
                 S.of(context).country,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: AppColors.gray.withOpacity(0.8),
                       fontWeight: FontWeight.bold,
                     ),
               ),
@@ -550,7 +555,6 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
               Text(
                 movieDetailsModel.country ?? defaultStr,
                 style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                      color: AppColors.white,
                       fontWeight: FontWeight.normal,
                     ),
               ),
@@ -565,7 +569,6 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
               Text(
                 S.of(context).language,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: AppColors.gray.withOpacity(0.8),
                       fontWeight: FontWeight.bold,
                     ),
               ),
@@ -575,7 +578,6 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
               Text(
                 movieDetailsModel.language ?? defaultStr,
                 style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                      color: AppColors.white,
                       fontWeight: FontWeight.normal,
                     ),
               ),
@@ -589,16 +591,16 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
   // Director ands Creator
   Widget _buildDirectorAndWriter(MovieDetailsModel movieDetailsModel) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (movieDetailsModel.director != null &&
             movieDetailsModel.director != notANumber) ...{
           Text(
             movieDetailsModel.director ?? defaultStr,
             style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                  color: AppColors.white,
                   fontWeight: FontWeight.normal,
                 ),
+            textAlign: TextAlign.center,
           ),
           SizedBox(
             height: 5.h,
@@ -609,9 +611,10 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
           Text(
             movieDetailsModel.writer ?? defaultStr,
             style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                  color: AppColors.white,
                   fontWeight: FontWeight.normal,
                 ),
+            textAlign: TextAlign.center,
+
           ),
         },
       ],

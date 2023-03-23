@@ -31,12 +31,6 @@ class SuccessGetMoviesState extends MoviesState {
 
 /// --------------------End Get Movies-------------------- ///
 
-/// --------------------Start Clear Text Field-------------------- ///
-
-class ClearSearchTextFieldState extends MoviesState {}
-
-/// --------------------End Clear Text Field-------------------- ///
-
 /// --------------------Start Get Movie Details By Id-------------------- ///
 
 /// Loading get movie details by id state
